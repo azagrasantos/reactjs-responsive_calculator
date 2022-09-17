@@ -99,8 +99,8 @@ function reducer(state, { type, payload }) {
 }
 
 function evaluate({ currentOperand, previousOperand, operation }) {
-  const prev = parseFloat(previousOperand)
-  const current = parseFloat(currentOperand)
+  const prev = parseFloat(previousOperand.toString().replace(',', '.'))
+  const current = parseFloat(currentOperand.toString().replace(',', '.'))
 
   if (isNaN(prev) || isNaN(current)) return ""
   
@@ -121,7 +121,7 @@ function evaluate({ currentOperand, previousOperand, operation }) {
     default: break;
   }
 
-  return computation
+  return computation.toFixed(1)
 }
 
 const INTEGER_FORMATTER = new Intl.NumberFormat("es-es", {
@@ -130,10 +130,10 @@ const INTEGER_FORMATTER = new Intl.NumberFormat("es-es", {
 
 function formatOperand(operand) {
   if (operand == null) return
-  const [integer, decimal] = operand.toString().split('.')
+  const [integer, decimal] = (operand.toString().replace(',', '.')).toString().split('.')
 
   if (decimal == null) return INTEGER_FORMATTER.format(integer)
-  return `${ INTEGER_FORMATTER.format(integer) }.${ decimal }`
+  return `${ INTEGER_FORMATTER.format(integer) },${ decimal }`
 }
 
 function App() {
@@ -145,6 +145,7 @@ function App() {
           <div className="previous-operand">{ formatOperand(previousOperand) } { operation }</div>
           <div className="current-operand">{ formatOperand(currentOperand) }</div>
         </div>
+        
         <button className="span-two" onClick={() => dispatch({ type: ACTIONS.CLEAR })}>AC</button>
         <button onClick={() => dispatch({ type: ACTIONS.DELETE_DIGIT })}>DEL</button>
         <OperationButton operation="/" dispatch={ dispatch } />
@@ -160,7 +161,7 @@ function App() {
         <DigitButton digit="8" dispatch={ dispatch } />
         <DigitButton digit="9" dispatch={ dispatch } />
         <OperationButton operation="-" dispatch={ dispatch } />
-        <DigitButton digit="." dispatch={ dispatch } />
+        <DigitButton digit="," dispatch={ dispatch } />
         <DigitButton digit="0" dispatch={ dispatch } />
         <button className="span-two" onClick={() => dispatch({ type: ACTIONS.EVALUATE })}>=</button>
       </div>
