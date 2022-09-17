@@ -102,7 +102,7 @@ function evaluate({ currentOperand, previousOperand, operation }) {
   const prev = parseFloat(previousOperand)
   const current = parseFloat(currentOperand)
 
-  if (isNaN(prev || isNaN(current))) return ""
+  if (isNaN(prev) || isNaN(current)) return ""
   
   let computation = ""
   switch (operation) {
@@ -118,6 +118,7 @@ function evaluate({ currentOperand, previousOperand, operation }) {
     case "/":
       computation = prev / current
       break
+    default: break;
   }
 
   return computation
@@ -129,7 +130,7 @@ const INTEGER_FORMATTER = new Intl.NumberFormat("es-es", {
 
 function formatOperand(operand) {
   if (operand == null) return
-  const [integer, decimal] = operand.split('.')
+  const [integer, decimal] = operand.toString().split('.')
 
   if (decimal == null) return INTEGER_FORMATTER.format(integer)
   return `${ INTEGER_FORMATTER.format(integer) }.${ decimal }`
