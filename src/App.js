@@ -121,7 +121,7 @@ function evaluate({ currentOperand, previousOperand, operation }) {
     default: break;
   }
 
-  return computation.toFixed(1)
+  return (computation % 1 != 0) ? computation.toFixed(1) : computation
 }
 
 const INTEGER_FORMATTER = new Intl.NumberFormat("es-es", {
